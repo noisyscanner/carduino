@@ -2,8 +2,9 @@
 #include "df_can.h"
 
 // To monitor:
-// screen /dev/cu.usbserial-1420 50000
-// canmonitor /dev/cu.usbserial-1420 50000
+// screen /dev/cu.usbserial-1420 230400
+// canmonitor /dev/cu.usbserial-1420 230400
+// screen -L to log to file
 
 const int SPI_CS_PIN = 10; // Uno
 //const int SPI_CS_PIN = 53; // Mega 2560
@@ -13,10 +14,10 @@ unsigned char len = 0;
 byte buffer[8];
 
 void setup() {
-  setupBt();
-
-  Serial.begin(500000);
+  Serial.begin(230400);
   Serial.println("Serial init");
+
+  setupBt();
 
   int count = 50;
   do {
@@ -40,8 +41,8 @@ void loop() {
   int canID = CAN.getCanId();
 
 //    if (canID == 0x2D5 || canID == 486) {
-//  log(canID, len, buffer);
+//  log (canID, len, buffer);
 //    }
 
-  parse(canID, buffer);
+//  parse(canID, buffer);
 }

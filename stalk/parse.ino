@@ -18,8 +18,12 @@ const unsigned char SEEK_PREV = 0x8;
 const unsigned char SEEK_NEXT = 0x4;
 const unsigned char MODE = 0x1;
 
+byte lastOnState = -1;
+
 boolean isMuted = false;
 char lastIgnitionPos = 0xA;
+
+unsigned long lastNew = millis();
 
 char getNibble(byte* buf, const short idx, const char nibble) {
   byte b = buf[idx];
@@ -35,6 +39,23 @@ void parse(INT32U canId, byte* buf) {
       return processStalk(buf);
     case 0x2DC:
       byte val = buf[0];
+      // if there is a change, wait a bit and parse the next one
+      // to make sure the state is the same in 1s
+      // to avoid restart when starting engine
+      if (lastOnState != val) {
+        Serial.println("New state");
+        Serial.println(val);
+        lastOnState = val;
+        lastNew = millis();
+        return;
+      }
+      if (millis() < lastNew + 2500) {
+        Serial.println("Same value, wait");
+        return;
+      }
+      Serial.println("Waiting done, act");
+      lastNew = millis();
+//      Serial.println(isOn);
       // This is 0 when radio is off, or other values when on
       if ((val == 0 && isOn) || (val != 0 && !isOn)) {
         Serial.println("Turn");
