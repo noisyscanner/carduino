@@ -19,9 +19,11 @@ void press(byte pin) {
 
 void longPress(byte pin) {
   if (isOn) {
+    Serial.println("Turn off");
     hold(pin, 3200);
   } else {
     Serial.println("Turn on");
+    hold(pin, 1500);
   }  
 }
 

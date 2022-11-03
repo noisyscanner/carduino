@@ -44,5 +44,5 @@ void loop() {
 //  log (canID, len, buffer);
 //    }
 
-//  parse(canID, buffer);
+  parse(canID, buffer);
 }
